@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">PhotoCollection</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="create_album_no_name_error">Album name needed</string>
+    <string name="create_album_no_thumbnail_error">Thumbnail needed</string>
+</resources>
