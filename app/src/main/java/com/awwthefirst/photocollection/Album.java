@@ -31,6 +31,11 @@ public class Album {
         this.name = name;
     }
 
+    public Album(Uri thumbnail, String name, ArrayList<ImageItem> contents) {
+        this(thumbnail, name);
+        this.contents = contents;
+    }
+
     public void addImageItem(ImageItem imageItem, Context context) {
         contents.add(imageItem);
         try {
@@ -54,8 +59,8 @@ public class Album {
         return thumbnail;
     }
 
-    public void toJson(Context context, boolean loadContents) throws IOException { //TODO shouldn't override existing albums
-        File dir = context.getDir("albums", Context.MODE_PRIVATE); //TODO load contents needs to actually be a thing
+    public void toJson(Context context) throws IOException { //TODO shouldn't override existing albums
+        File dir = context.getDir("albums", Context.MODE_PRIVATE);
         File albumDir = new File(dir, name);
         albumDir.mkdir();
         File jsonFile = new File(albumDir, name + ".json");
@@ -65,14 +70,25 @@ public class Album {
             jsonWriter.beginObject();
             jsonWriter.name("thumbnail").value(thumbnail.getPath());
             jsonWriter.name("album_name").value(name);
+
+            jsonWriter.name("contents").beginArray();
+            for (ImageItem imageItem : contents) {
+                jsonWriter.beginObject();
+                jsonWriter.name("image_item_uri").value(imageItem.getImageUri().toString());
+                jsonWriter.name("image_item_text").value(imageItem.getText());
+                jsonWriter.endObject();
+            }
+            jsonWriter.endArray();
+
             jsonWriter.endObject();
             jsonWriter.close();
         }
     }
 
-    public static Album fromJson(File file) throws IOException {
+    public static Album fromJson(File file, boolean loadContents) throws IOException {
         Uri thumbnail = null;
         String albumName = null;
+        ArrayList<ImageItem> contents = new ArrayList<>();
 
         JsonReader jsonReader = new JsonReader(new InputStreamReader(new FileInputStream(file),
                 StandardCharsets.UTF_8));
@@ -86,10 +102,38 @@ public class Album {
                 case "album_name":
                     albumName = jsonReader.nextString();
                     break;
+                case "contents":
+                    if (loadContents) {
+                        jsonReader.beginArray();
+                        while (jsonReader.hasNext()) {
+                            jsonReader.beginObject();
+
+                            Uri imageItemUri = null;
+                            String imageItemText = null;
+
+                            while (jsonReader.hasNext()) {
+                                String contentsName = jsonReader.nextName();
+                                switch (contentsName) {
+                                    case "image_item_uri":
+                                        imageItemUri = Uri.parse(jsonReader.nextString());
+                                        break;
+                                    case "image_item_text":
+                                        imageItemText = jsonReader.nextString();
+                                        break;
+                                }
+                            }
+
+                            contents.add(new ImageItem(imageItemUri, imageItemText));
+                            jsonReader.endObject();
+                        }
+                        jsonReader.endArray();
+                    } else {
+                        jsonReader.skipValue();
+                    }
             }
         }
         jsonReader.close();
 
-        return new Album(thumbnail, albumName);
+        return new Album(thumbnail, albumName, contents);
     }
 }

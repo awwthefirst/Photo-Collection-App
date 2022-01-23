@@ -23,8 +23,13 @@ public class AlbumActivity extends AppCompatActivity {
 
     private ActivityResultLauncher<Intent> activityResultLauncher = Utils.registerToPickImage(uri -> {
         ImageItem imageItem = new ImageItem(uri, "");
-        ((AlbumContentRecyclerViewAdapter)albumContentRecyclerView.getAdapter())
-                .addImageItem(imageItem, this);
+        AlbumContentRecyclerViewAdapter albumContentRecyclerViewAdapter = ((AlbumContentRecyclerViewAdapter)albumContentRecyclerView.getAdapter());
+        albumContentRecyclerViewAdapter.addImageItem(imageItem, this);
+        try {
+            albumContentRecyclerViewAdapter.getAlbum().toJson(this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }, this);
 
     public static void startNewInstance(Context packageContext, String albumName) {
@@ -44,7 +49,7 @@ public class AlbumActivity extends AppCompatActivity {
         File albumDir = getDir("albums", Context.MODE_PRIVATE);
         File albumJson = new File(albumDir, albumName + "/" + albumName + ".json");
         try {
-            Album album = Album.fromJson(albumJson);
+            Album album = Album.fromJson(albumJson, true);
             albumContentRecyclerView = findViewById(R.id.album_content_recyler_view);
             albumContentRecyclerView.setLayoutManager(new LinearLayoutManager(this));
             albumContentRecyclerView.setAdapter(new AlbumContentRecyclerViewAdapter(album));

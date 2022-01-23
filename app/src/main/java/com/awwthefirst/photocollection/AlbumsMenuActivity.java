@@ -45,7 +45,8 @@ public class AlbumsMenuActivity extends AppCompatActivity implements AlbumMenuRe
         File dir = getDir("albums", Context.MODE_PRIVATE);
         File[] files = dir.listFiles();
         for (File file : files) {
-            Album album = Album.fromJson(new File(file, file.getName() + ".json"));
+            Album album = Album.fromJson(new File(file, file.getName() + ".json"),
+                    false);
             addAlbum(album);
         }
     }

@@ -62,7 +62,7 @@ public class CreateAlbumActivity extends AppCompatActivity {
         try {
             Uri newUri = Utils.copyImageToInternalStorage(thumbnailUri, "thumbnails",
                     albumName, this);
-            new Album(newUri, albumName).toJson(this, false);
+            new Album(newUri, albumName).toJson(this);
 
             Intent intent = new Intent(this, AlbumsMenuActivity.class);
             startActivity(intent);

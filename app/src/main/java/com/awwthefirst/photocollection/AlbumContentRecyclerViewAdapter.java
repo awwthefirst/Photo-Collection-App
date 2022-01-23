@@ -66,4 +66,8 @@ public class AlbumContentRecyclerViewAdapter extends RecyclerView.Adapter {
         album.addImageItem(imageItem, context);
         notifyItemInserted(getItemCount() - 1);
     }
+
+    public Album getAlbum() {
+        return album;
+    }
 }
