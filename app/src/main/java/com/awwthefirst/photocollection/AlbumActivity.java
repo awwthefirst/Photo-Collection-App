@@ -25,11 +25,6 @@ public class AlbumActivity extends AppCompatActivity {
         ImageItem imageItem = new ImageItem(uri, "");
         AlbumContentRecyclerViewAdapter albumContentRecyclerViewAdapter = ((AlbumContentRecyclerViewAdapter)albumContentRecyclerView.getAdapter());
         albumContentRecyclerViewAdapter.addImageItem(imageItem, this);
-        try {
-            albumContentRecyclerViewAdapter.getAlbum().toJson(this);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }, this);
 
     public static void startNewInstance(Context packageContext, String albumName) {
@@ -68,8 +63,15 @@ public class AlbumActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onDestroy() {
-        Log.d(TAG, "onDestroy: Test");
-        super.onDestroy();
+    protected void onStop() {
+        AlbumContentRecyclerViewAdapter albumContentRecyclerViewAdapter =
+                (AlbumContentRecyclerViewAdapter) albumContentRecyclerView.getAdapter();
+        try {
+            albumContentRecyclerViewAdapter.getAlbum().toJson(this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        super.onStop();
     }
 }

@@ -30,7 +30,7 @@ public class AlbumsMenuActivity extends AppCompatActivity implements AlbumMenuRe
         albumsMenuRecyclerView = findViewById(R.id.albums_menu_recycler_view);
 
         AlbumMenuRecyclerViewAdapter albumMenuRecyclerViewAdapter =
-                new AlbumMenuRecyclerViewAdapter(this); //TODO needs to save and load albums
+                new AlbumMenuRecyclerViewAdapter(this);
         albumsMenuRecyclerView.setAdapter(albumMenuRecyclerViewAdapter);
         albumsMenuRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
