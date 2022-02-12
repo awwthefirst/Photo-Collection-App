@@ -2,20 +2,16 @@ package com.awwthefirst.photocollection;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Arrays;
 
 public class AlbumsMenuActivity extends AppCompatActivity implements AlbumMenuRecyclerViewAdapter.OnAlbumClickedListener {
 
@@ -34,20 +30,25 @@ public class AlbumsMenuActivity extends AppCompatActivity implements AlbumMenuRe
         albumsMenuRecyclerView.setAdapter(albumMenuRecyclerViewAdapter);
         albumsMenuRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        try {
-            loadAlbums();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        DividerItemDecoration dividerItemDecoration = Utils.getInsetDivider(this, 20);
+        albumsMenuRecyclerView.addItemDecoration(dividerItemDecoration);
+
+        loadAlbums();
     }
 
-    private void loadAlbums() throws IOException {
+    private void loadAlbums() {
         File dir = getDir("albums", Context.MODE_PRIVATE);
         File[] files = dir.listFiles();
         for (File file : files) {
-            Album album = Album.fromJson(new File(file, file.getName() + ".json"),
-                    false);
-            addAlbum(album);
+            try {
+                File json = new File(file, file.getName() + ".json");
+                if (json.exists()) {
+                    Album album = Album.fromJson(json, false);
+                    addAlbum(album);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -65,5 +66,12 @@ public class AlbumsMenuActivity extends AppCompatActivity implements AlbumMenuRe
     @Override
     public void onAlbumClicked(Album album) {
         AlbumActivity.startNewInstance(this, album.getName());
+    }
+
+    @Override
+    public void onAlbumLongClicked(Album album) {
+        DeleteAlbumDialogFragment deleteAlbumDialogueFragment = new DeleteAlbumDialogFragment
+                ((AlbumMenuRecyclerViewAdapter) albumsMenuRecyclerView.getAdapter(), album);
+        deleteAlbumDialogueFragment.show(getSupportFragmentManager(), "DeleteAlbumDialog");
     }
 }

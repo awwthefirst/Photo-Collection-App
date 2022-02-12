@@ -6,19 +6,16 @@ import android.util.JsonReader;
 import android.util.JsonWriter;
 import android.util.Log;
 
+import org.apache.commons.io.FileUtils;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class Album {
     private ArrayList<ImageItem> contents;
@@ -45,6 +42,12 @@ public class Album {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void removeImageItem(ImageItem imageItem) {
+        Log.d("TAG", "removeImageItem: " + contents.remove(imageItem));
+        File image = new File(imageItem.getImageUri().getPath());
+        image.delete();
     }
 
     public ArrayList<ImageItem> getContents() {
@@ -135,5 +138,17 @@ public class Album {
         jsonReader.close();
 
         return new Album(thumbnail, albumName, contents);
+    }
+
+    public void deleteSaveData(Context context) throws IOException {
+        File dir = context.getDir("albums", Context.MODE_PRIVATE);
+        File albumDir = new File(dir, name);
+        FileUtils.deleteDirectory(albumDir);
+    }
+
+    public static boolean doesAlbumExists(String name, Context context) {
+        File dir = context.getDir("albums", Context.MODE_PRIVATE);
+        File albumDir = new File(dir, name);
+        return albumDir.exists();
     }
 }

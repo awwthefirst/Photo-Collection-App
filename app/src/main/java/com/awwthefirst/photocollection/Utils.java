@@ -3,12 +3,16 @@ package com.awwthefirst.photocollection;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.TypedArray;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.InsetDrawable;
 import android.net.Uri;
 import android.provider.MediaStore;
 
 import androidx.activity.ComponentActivity;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.recyclerview.widget.DividerItemDecoration;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -61,5 +65,20 @@ public class Utils {
             }
         }
         in.close();
+    }
+
+    public static DividerItemDecoration getInsetDivider(Activity activity, int inset) {
+        int[] ATTRS = new int[]{android.R.attr.listDivider};
+
+        TypedArray a = activity.obtainStyledAttributes(ATTRS);
+        Drawable divider = a.getDrawable(0);
+        InsetDrawable insetDivider = new InsetDrawable(divider, inset, 0, inset, 0);
+        a.recycle();
+
+        DividerItemDecoration itemDecoration = new DividerItemDecoration(activity,
+                DividerItemDecoration.VERTICAL);
+        itemDecoration.setDrawable(insetDivider);
+
+        return itemDecoration;
     }
 }

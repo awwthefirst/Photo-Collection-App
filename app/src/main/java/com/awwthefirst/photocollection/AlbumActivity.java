@@ -1,7 +1,9 @@
 package com.awwthefirst.photocollection;
 
 import androidx.activity.result.ActivityResultLauncher;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -10,12 +12,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
 import java.io.File;
 import java.io.IOException;
 
-public class AlbumActivity extends AppCompatActivity {
+public class AlbumActivity extends AppCompatActivity
+        implements AlbumContentRecyclerViewAdapter.OnImageItemClickedListener {
 
     private static final String TAG = "MainActivity";
     private static final String ARG_ALBUM_NAME = "album_name";
@@ -47,7 +52,13 @@ public class AlbumActivity extends AppCompatActivity {
             Album album = Album.fromJson(albumJson, true);
             albumContentRecyclerView = findViewById(R.id.album_content_recyler_view);
             albumContentRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-            albumContentRecyclerView.setAdapter(new AlbumContentRecyclerViewAdapter(album));
+            albumContentRecyclerView.setAdapter(new AlbumContentRecyclerViewAdapter(album,
+                    this));
+
+            DividerItemDecoration dividerItemDecoration = Utils.getInsetDivider(this, 15);
+            albumContentRecyclerView.addItemDecoration(dividerItemDecoration);
+
+            setTitle(album.getName());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -62,6 +73,7 @@ public class AlbumActivity extends AppCompatActivity {
         chooseImage();
     }
 
+    //Saves the contents of the album
     @Override
     protected void onStop() {
         AlbumContentRecyclerViewAdapter albumContentRecyclerViewAdapter =
@@ -73,5 +85,14 @@ public class AlbumActivity extends AppCompatActivity {
         }
 
         super.onStop();
+    }
+
+    @Override
+    public void onImageItemLongClicked(ImageItem imageItem) {
+        AlbumContentRecyclerViewAdapter albumContentRecyclerViewAdapter =
+                (AlbumContentRecyclerViewAdapter) albumContentRecyclerView.getAdapter();
+        DeleteImageItemDialogFragment deleteImageItemDialogFragment =
+                new DeleteImageItemDialogFragment(albumContentRecyclerViewAdapter, imageItem);
+        deleteImageItemDialogFragment.show(getSupportFragmentManager(), "DeleteImageItem");
     }
 }

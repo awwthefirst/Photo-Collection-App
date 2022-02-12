@@ -4,4 +4,10 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="create_album_no_name_error">Album name needed</string>
     <string name="create_album_no_thumbnail_error">Thumbnail needed</string>
+    <string name="create_album_alerady_exists_error">A album with that name already exists</string>
+    <string name="add_image_button">Add Image</string>
+    <string name="new_album_button">New Album</string>
+    <string name="album_name_hint">Album name</string>
+    <string name="choose_thumbnail_button">Choose Thumbnail</string>
+    <string name="create_album_button">Create</string>
 </resources>

@@ -10,19 +10,22 @@
         android:id="@+id/albums_menu_recycler_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:background="@color/blue_white"
+        android:overScrollMode="never"
         app:layout_constraintBottom_toTopOf="@+id/create_album_button"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:overScrollMode="never"/>
+        app:layout_constraintVertical_bias="0.0" />
 
     <Button
         android:id="@+id/create_album_button"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
+        android:background="@color/buttons_gray"
         android:onClick="createNewAlbum"
-        android:text="Button"
+        android:text="@string/new_album_button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

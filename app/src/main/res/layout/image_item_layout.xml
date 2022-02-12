@@ -3,14 +3,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    android:background="@color/blue_white">
 
     <ImageView
         android:id="@+id/image_item_image_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        app:srcCompat="@mipmap/ic_launcher" />
+        android:adjustViewBounds="true"
+        app:srcCompat="@mipmap/ic_launcher"
+        tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
     <EditText
         android:id="@+id/image_item_text"
@@ -19,7 +23,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/image_item_image_view"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
         android:background="@null"
         android:ems="10"
-        android:inputType="textPersonName" />
+        android:inputType="textPersonName"
+        android:textAlignment="center" />
 </RelativeLayout>

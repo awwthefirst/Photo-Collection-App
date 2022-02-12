@@ -59,6 +59,12 @@ public class CreateAlbumActivity extends AppCompatActivity {
             return;
         }
 
+        if (Album.doesAlbumExists(albumName, this)) {
+            errorTextView.setVisibility(View.VISIBLE);
+            errorTextView.setText(R.string.create_album_alerady_exists_error);
+            return;
+        }
+
         try {
             Uri newUri = Utils.copyImageToInternalStorage(thumbnailUri, "thumbnails",
                     albumName, this);

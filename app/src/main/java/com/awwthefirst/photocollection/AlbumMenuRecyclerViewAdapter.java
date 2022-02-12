@@ -1,5 +1,6 @@
 package com.awwthefirst.photocollection;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -18,7 +20,7 @@ public class AlbumMenuRecyclerViewAdapter extends RecyclerView.Adapter {
     private OnAlbumClickedListener onAlbumClickedListener;
 
     public static class AlbumMenuViewHolder extends RecyclerView.ViewHolder
-            implements View.OnClickListener{
+            implements View.OnClickListener, View.OnLongClickListener{
 
         private ImageView thumbnailImageView;
         private TextView albumNameTextView;
@@ -32,6 +34,7 @@ public class AlbumMenuRecyclerViewAdapter extends RecyclerView.Adapter {
             this.onAlbumClickedListener = onAlbumClickedListener;
 
             itemView.setOnClickListener(this);
+            itemView.setOnLongClickListener(this);
 
             thumbnailImageView = itemView.findViewById(R.id.album_thumbnail_image_view);
             albumNameTextView = itemView.findViewById(R.id.album_name_text_view);
@@ -46,6 +49,12 @@ public class AlbumMenuRecyclerViewAdapter extends RecyclerView.Adapter {
         @Override
         public void onClick(View view) {
             onAlbumClickedListener.onAlbumClicked(album);
+        }
+
+        @Override
+        public boolean onLongClick(View v) {
+            onAlbumClickedListener.onAlbumLongClicked(album);
+            return true;
         }
     }
 
@@ -83,7 +92,20 @@ public class AlbumMenuRecyclerViewAdapter extends RecyclerView.Adapter {
         notifyItemInserted(data.size() - 1);
     }
 
+    public void deleteAlbum(Album album, Context context) {
+        int index = data.indexOf(album);
+        data.remove(album);
+        notifyItemRemoved(index);
+
+        try {
+            album.deleteSaveData(context);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public interface OnAlbumClickedListener {
         void onAlbumClicked(Album album);
+        void onAlbumLongClicked(Album album);
     }
 }
